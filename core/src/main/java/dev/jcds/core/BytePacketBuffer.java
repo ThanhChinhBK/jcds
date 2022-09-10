@@ -38,6 +38,17 @@ public class BytePacketBuffer {
         return buf[pos];
     }
 
+    String readIpAddress() {
+        int rawAddress = readFourByte();
+        return String.format(
+                "%d.%d.%d.%d",
+                (rawAddress >> 24) & 0xFF,
+                (rawAddress >> 16) & 0xFF,
+                (rawAddress >> 8) & 0xFF,
+                rawAddress & 0xFF
+        );
+    }
+
     byte[] getRange(int start, int len) {
         if (start + len >= 512) {
             throw new IndexOutOfBoundsException("Buffer overflow");
