@@ -17,7 +17,7 @@ public class DnsPacket {
         resources = new Vector<DnsRecord>();
     }
 
-    DnsPacket fromBuffer(BytePacketBuffer buffer) {
+    static DnsPacket fromBuffer(BytePacketBuffer buffer) {
         DnsPacket result = new DnsPacket();
         result.header.read(buffer);
 

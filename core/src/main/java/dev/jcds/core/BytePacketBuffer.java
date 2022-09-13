@@ -12,6 +12,11 @@ public class BytePacketBuffer {
         pos = 0;
     }
 
+    public void setBuf(byte[] buf) {
+        this.buf = buf;
+        pos = 0;
+    }
+
     public int getPos() {
         return pos;
     }
