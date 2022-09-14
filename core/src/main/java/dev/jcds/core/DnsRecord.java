@@ -48,4 +48,17 @@ public class DnsRecord {
         }
     }
 
+    @Override
+    public String toString() {
+        return "DnsRecord{" +
+                "type=" + type +
+                ", domain='" + domain + '\'' +
+                ", qtype=" + qtype +
+                ", dataLength=" + dataLength +
+                ", ttl=" + ttl +
+                ", address='" + address + '\'' +
+                '}';
+    }
+
+
 }

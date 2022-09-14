@@ -30,4 +30,15 @@ public class QueryType {
         return new QueryType(value);
     }
 
+    @Override
+    public String toString() {
+     switch (type) {
+            case A:
+                return "A";
+            default:
+                return "Unknown";
+     }
+
+    }
+
 }

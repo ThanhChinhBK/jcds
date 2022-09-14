@@ -13,4 +13,12 @@ public class DnsQuestion {
         qname = buffer.readQName(this.qname);
         qtype = QueryType.fromValue(buffer.readDoubleByte());
     }
+
+    @Override
+    public String toString() {
+        return "DnsQuestion{" +
+                "qname='" + qname + '\'' +
+                ", qtype=" + qtype +
+                '}';
+    }
 }

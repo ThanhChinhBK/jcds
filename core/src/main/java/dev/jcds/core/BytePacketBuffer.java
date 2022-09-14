@@ -13,7 +13,7 @@ public class BytePacketBuffer {
     }
 
     public void setBuf(byte[] buf) {
-        this.buf = buf;
+        System.arraycopy(buf, 0, this.buf, 0, buf.length);
         pos = 0;
     }
 

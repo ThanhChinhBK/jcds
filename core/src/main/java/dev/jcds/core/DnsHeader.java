@@ -60,4 +60,25 @@ public class DnsHeader {
         this.authorityEntriesCount = buffer.readDoubleByte();
         this.resourceEntriesCount = buffer.readDoubleByte();
     }
+
+    @Override
+    public String toString() {
+        return "DnsHeader{" +
+                "id=" + id +
+                ", recursionDesired=" + recursionDesired +
+                ", truncatedMessage=" + truncatedMessage +
+                ", authoritativeAnswer=" + authoritativeAnswer +
+                ", opcode=" + opcode +
+                ", response=" + response +
+                ", resultCode=" + resultCode +
+                ", checkingDisabled=" + checkingDisabled +
+                ", authenticatedData=" + authenticatedData +
+                ", z=" + z +
+                ", recursionAvailable=" + recursionAvailable +
+                ", questionCount=" + questionCount +
+                ", answerCount=" + answerCount +
+                ", authorityEntriesCount=" + authorityEntriesCount +
+                ", resourceEntriesCount=" + resourceEntriesCount +
+                '}';
+    }
 }
