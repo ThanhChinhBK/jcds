@@ -5,7 +5,9 @@ import java.nio.charset.StandardCharsets;
 
 public class BytePacketBuffer {
     private ByteBuffer buf;
-    final int maxJump = 5;
+
+    private static final int LABEL_COMPRESSION = 0xC0;
+    private static final int LABEL_MASK = 0xC0;
 
     public BytePacketBuffer() {
         buf = ByteBuffer.allocate(512);
@@ -15,7 +17,6 @@ public class BytePacketBuffer {
         byte[] newBuf = new byte[512];
         System.arraycopy(buf, 0, newBuf, 0, buf.length);
         this.buf = ByteBuffer.wrap(newBuf);
-
     }
 
     public int getPos() {
@@ -34,12 +35,13 @@ public class BytePacketBuffer {
         return buf.get() & 0xFF;
     }
 
-    byte get(int pos) {
-        return buf.get(pos);
+    int get(int pos) {
+        return buf.get(pos) & 0xFF;
+
     }
 
     String readIpAddress() {
-        int rawAddress = readFourByte();
+        long rawAddress = readFourByte();
         return String.format(
                 "%d.%d.%d.%d",
                 (rawAddress >> 24) & 0xFF,
@@ -50,8 +52,11 @@ public class BytePacketBuffer {
     }
 
     byte[] getRange(int start, int len) {
+        int curr = buf.position();
+        seek(start);
         byte[] range = new byte[len];
-        this.buf.get(range, start, len);
+        this.buf.get(range, 0, len);
+        seek(curr);
         return range;
     }
 
@@ -89,19 +94,20 @@ public class BytePacketBuffer {
             // Dns Packets are untrusted data, so we need to be paranoid. Someone
             // can craft a packet with a cycle in the jump instructions. This guards
             // against such packets.
-            if (jumpPerformed > maxJump) {
+            int MAX_JUMP = 5;
+            if (jumpPerformed > MAX_JUMP) {
                 throw new RuntimeException(
-                        String.format("limit of %d jumps exceeded", maxJump)
+                        String.format("limit of %d jumps exceeded", MAX_JUMP)
                 );
             }
 
             // At this point, we're always at the beginning of a label. Recall
             // that labels start with a length byte.
-            int len = get(pos);
+            int len = this.read();
 
             // If len has the two most significant bit are set, it represents a
             // jump to some other offset in the packet:
-            if ((len  & 0xC0) == 0xC0) {
+            if ((len  & LABEL_MASK) == LABEL_COMPRESSION) {
                 if (!jumped) {
                     // If we haven't jumped yet, we need to update the shared
                     // position to be the position after the jump. This is
@@ -113,8 +119,8 @@ public class BytePacketBuffer {
 
                 // Read another byte, calculate offset and perform the jump by
                 // updating our local position variable
-                int offset = get(pos + 1);
-                pos = (len & 0xC0) << 8 | offset;
+                int b2 = get(pos + 1);
+                pos = (len ^ LABEL_MASK) << 8 | b2;
 
                 jumped = true;
                 jumpPerformed++;
@@ -122,7 +128,7 @@ public class BytePacketBuffer {
             } else {
                 // the base case: len is a normal label length
                 // we're reading a normal label, push it into outstr
-                pos++;
+                pos += 1;
                 if (len == 0) {
                     break;
                 }

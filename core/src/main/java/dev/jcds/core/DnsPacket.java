@@ -24,7 +24,7 @@ public class DnsPacket {
         for (int i = 0; i < result.header.questionCount; i++) {
             DnsQuestion question = new DnsQuestion(
                     "",
-                    QueryType.fromValue(1) // UNKNOWN
+                    QueryType.fromValue(0) // UNKNOWN
             );
             question.read(buffer);
             result.questions.add(question);
