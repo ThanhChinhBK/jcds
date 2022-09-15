@@ -1,46 +1,41 @@
 package dev.jcds.core;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class BytePacketBuffer {
-    private byte[] buf;
-    private int pos;
+    private ByteBuffer buf;
     final int maxJump = 5;
 
     public BytePacketBuffer() {
-        buf = new byte[512];
-        pos = 0;
+        buf = ByteBuffer.allocate(512);
     }
 
     public void setBuf(byte[] buf) {
-        System.arraycopy(buf, 0, this.buf, 0, buf.length);
-        pos = 0;
+        byte[] newBuf = new byte[512];
+        System.arraycopy(buf, 0, newBuf, 0, buf.length);
+        this.buf = ByteBuffer.wrap(newBuf);
+
     }
 
     public int getPos() {
-        return pos;
+        return buf.position();
     }
 
     void step(int steps) {
-        pos += steps;
+        buf.position(buf.position() + steps);
     }
 
     void seek(int pos) {
-        this.pos = pos;
+        buf.position(pos);
     }
 
-    byte read(){
-        if (pos >= 512) {
-            throw new IndexOutOfBoundsException("Buffer overflow");
-        }
-        return buf[pos++];
+    int read(){
+        return buf.get() & 0xFF;
     }
 
     byte get(int pos) {
-        if (pos >= 512) {
-            throw new IndexOutOfBoundsException("Buffer overflow");
-        }
-        return buf[pos];
+        return buf.get(pos);
     }
 
     String readIpAddress() {
@@ -55,21 +50,17 @@ public class BytePacketBuffer {
     }
 
     byte[] getRange(int start, int len) {
-        if (start + len >= 512) {
-            throw new IndexOutOfBoundsException("Buffer overflow");
-        }
-
-        byte[] result = new byte[len];
-        System.arraycopy(buf, start, result, 0, len);
-        return result;
+        byte[] range = new byte[len];
+        this.buf.get(range, start, len);
+        return range;
     }
 
     int readDoubleByte() {
-        return (read() << 8) | read();
+        return this.buf.getShort() & 0xFFFF;
     }
 
     int readFourByte() {
-        return (read() << 24) | (read() << 16) | (read() << 8) | read();
+        return this.buf.getInt();
     }
 
     /// Read a qname
@@ -83,7 +74,7 @@ public class BytePacketBuffer {
         // allows us to move the shared position to a point past our current
         // qname, while keeping track of our progress on the current qname
         // using this variable.
-        int pos = this.pos;
+        int pos = this.getPos();
 
         // track whether  we've jumped
         boolean jumped = false;
