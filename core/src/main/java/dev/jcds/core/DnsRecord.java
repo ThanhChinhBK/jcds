@@ -32,17 +32,15 @@ public class DnsRecord {
 
     public static DnsRecord read(BytePacketBuffer buffer) {
         String domain = buffer.readQName("");
-
         int qtype = buffer.readDoubleByte();
         buffer.readDoubleByte(); // class
-        int ttl = buffer.readDoubleByte();
+        int ttl = buffer.readFourByte();
         int dataLength = buffer.readDoubleByte();
 
         switch (qtype) {
             case 1:
                 String address = buffer.readIpAddress();
                 return new DnsRecord(domain, address, ttl);
-
             default:
                 return new DnsRecord(domain, qtype, dataLength, ttl);
         }

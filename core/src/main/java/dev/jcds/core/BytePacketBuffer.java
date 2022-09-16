@@ -103,7 +103,7 @@ public class BytePacketBuffer {
 
             // At this point, we're always at the beginning of a label. Recall
             // that labels start with a length byte.
-            int len = this.read();
+            int len = this.get(pos);
 
             // If len has the two most significant bit are set, it represents a
             // jump to some other offset in the packet:
@@ -121,14 +121,13 @@ public class BytePacketBuffer {
                 // updating our local position variable
                 int b2 = get(pos + 1);
                 pos = (len ^ LABEL_MASK) << 8 | b2;
-
                 jumped = true;
                 jumpPerformed++;
-                continue;
             } else {
-                // the base case: len is a normal label length
-                // we're reading a normal label, push it into outstr
+                // move past the length byte
                 pos += 1;
+
+                // If we've reached the end of the qname, we're done.
                 if (len == 0) {
                     break;
                 }
@@ -141,13 +140,15 @@ public class BytePacketBuffer {
 
                 // Update position and delimiter
                 pos += len;
+
+
                 delim = ".";
             }
 
-            if (!jumped) {
-                seek(pos);
-            }
+        }
 
+        if (!jumped) {
+            seek(pos);
         }
         return outStrBuilder.toString();
     }
