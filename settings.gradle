@@ -1,3 +1,5 @@
 rootProject.name = 'jcds'
 include 'core'
+include 'core:src:test:dev.jcds.core'
+findProject(':core:src:test:dev.jcds.core')?.name = 'dev.jcds.core'
 

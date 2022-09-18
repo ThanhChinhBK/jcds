@@ -23,21 +23,35 @@ public class BytePacketBuffer {
         return buf.position();
     }
 
+    private void require(int step) {
+        if (buf.remaining() < step) {
+            throw new RuntimeException("Buffer overflow");
+        }
+    }
+
     void step(int steps) {
-        buf.position(buf.position() + steps);
+        require(steps);
+        buf.position(buf.position() + steps
+        );
     }
 
     void seek(int pos) {
+        if (pos < 0 || pos > buf.capacity()) {
+            throw new IllegalArgumentException("Invalid position");
+        }
         buf.position(pos);
     }
 
     int read(){
+        require(1);
         return buf.get() & 0xFF;
     }
 
     int get(int pos) {
+        if (pos < 0 || pos > buf.capacity()) {
+            throw new IllegalArgumentException("Invalid position");
+        }
         return buf.get(pos) & 0xFF;
-
     }
 
     String readIpAddress() {
@@ -52,6 +66,9 @@ public class BytePacketBuffer {
     }
 
     byte[] getRange(int start, int len) {
+        if (start < 0 || start + len > buf.capacity()) {
+            throw new IllegalArgumentException("Invalid position");
+        }
         int curr = buf.position();
         seek(start);
         byte[] range = new byte[len];
@@ -61,10 +78,12 @@ public class BytePacketBuffer {
     }
 
     int readDoubleByte() {
+        require(2);
         return this.buf.getShort() & 0xFFFF;
     }
 
     int readFourByte() {
+        require(4);
         return this.buf.getInt();
     }
 
