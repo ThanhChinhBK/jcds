@@ -1,5 +1,7 @@
 package dev.jcds.core;
 
+import dev.jcds.core.query.QueryType;
+
 import java.util.Vector;
 
 public class DnsPacket {

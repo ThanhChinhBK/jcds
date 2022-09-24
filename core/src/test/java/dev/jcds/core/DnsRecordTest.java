@@ -1,12 +1,12 @@
 package dev.jcds.core;
 
+import dev.jcds.core.query.AQueryType;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static dev.jcds.core.QueryType.*;
 
 public class DnsRecordTest {
     @Test
@@ -33,12 +33,12 @@ public class DnsRecordTest {
         assert packet.header.questionCount == 1;
         DnsQuestion question = packet.questions.get(0);
         assert question.qname.equals("google.com");
+        assert question.qtype.toString().equals("A");
 
         // test answers
         assert packet.header.answerCount == 1;
         DnsRecord record = packet.answers.get(0);
         assert record.domain.equals("google.com");
-
 
 
 

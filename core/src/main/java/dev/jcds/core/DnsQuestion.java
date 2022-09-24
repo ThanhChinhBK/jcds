@@ -1,5 +1,7 @@
 package dev.jcds.core;
 
+import dev.jcds.core.query.QueryType;
+
 public class DnsQuestion {
     String qname;
     QueryType qtype;
