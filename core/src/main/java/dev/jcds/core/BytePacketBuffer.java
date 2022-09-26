@@ -54,7 +54,7 @@ public class BytePacketBuffer {
         return buf.get(pos) & 0xFF;
     }
 
-    String readIpAddress() {
+    public String readIpAddress() {
         long rawAddress = readFourByte();
         return String.format(
                 "%d.%d.%d.%d",
@@ -77,12 +77,12 @@ public class BytePacketBuffer {
         return range;
     }
 
-    int readDoubleByte() {
+    public int readDoubleByte() {
         require(2);
         return this.buf.getShort() & 0xFFFF;
     }
 
-    int readFourByte() {
+    public int readFourByte() {
         require(4);
         return this.buf.getInt();
     }
@@ -92,7 +92,7 @@ public class BytePacketBuffer {
     /// The tricky part: Reading domain names, taking labels into consideration.
     /// Will take something like [3]www[6]google[3]com[0] and append
     /// www.google.com to outstr.
-    String readQName(String outStr) {
+    public String readQName(String outStr) {
         // Since we might encounter jumps, we'll keep track of our position
         // locally as opposed to using the position within the struct. This
         // allows us to move the shared position to a point past our current

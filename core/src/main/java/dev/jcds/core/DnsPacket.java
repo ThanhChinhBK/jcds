@@ -1,6 +1,7 @@
 package dev.jcds.core;
 
 import dev.jcds.core.query.QueryType;
+import dev.jcds.core.record.DnsRecord;
 
 import java.util.Vector;
 

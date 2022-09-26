@@ -1,6 +1,8 @@
 package dev.jcds.core;
 
 import dev.jcds.core.query.AQueryType;
+import dev.jcds.core.record.ADnsRecord;
+import dev.jcds.core.record.DnsRecord;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -38,7 +40,10 @@ public class DnsRecordTest {
         // test answers
         assert packet.header.answerCount == 1;
         DnsRecord record = packet.answers.get(0);
-        assert record.domain.equals("google.com");
+        assert record instanceof ADnsRecord;
+        assert record.getDomain().equals("google.com");
+        assert record.getTtl() == 54;
+
 
 
 
