@@ -51,4 +51,24 @@ public class DnsPacket {
         return result;
     }
 
+    void write(BytePacketBuffer buffer) {
+        header.write(buffer);
+
+        for (DnsQuestion question : questions) {
+            question.write(buffer);
+        }
+
+        for (DnsRecord record : answers) {
+            record.write(buffer);
+        }
+
+        for (DnsRecord record : authorities) {
+            record.write(buffer);
+        }
+
+        for (DnsRecord record : resources) {
+            record.write(buffer);
+        }
+    }
+
 }

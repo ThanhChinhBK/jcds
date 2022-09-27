@@ -28,11 +28,24 @@ public class DnsRecord {
 
     }
 
+
+    public void write(BytePacketBuffer buffer) {
+        System.out.println("Skipping record: " + this.toString());
+    }
+
     public String getDomain() {
         return domain;
     }
 
     public int getTtl() {
         return ttl;
+    }
+
+    @Override
+    public String toString() {
+        return "DnsRecord{" +
+                "domain='" + domain + '\'' +
+                ", ttl=" + ttl +
+                '}';
     }
 }

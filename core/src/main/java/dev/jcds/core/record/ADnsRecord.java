@@ -1,5 +1,7 @@
 package dev.jcds.core.record;
 
+import dev.jcds.core.BytePacketBuffer;
+
 public class ADnsRecord extends DnsRecord {
     private String address;
 
@@ -19,5 +21,15 @@ public class ADnsRecord extends DnsRecord {
                 ", domain='" + domain + '\'' +
                 ", ttl=" + ttl +
                 '}';
+    }
+
+    @Override
+    public void write(BytePacketBuffer buffer) {
+        buffer.writeQName(domain);
+        buffer.writeDoubleByte(1);
+        buffer.writeDoubleByte(1);
+        buffer.writeFourByte(ttl);
+        buffer.writeDoubleByte(4);
+        buffer.writeIpAddress(address);
     }
 }

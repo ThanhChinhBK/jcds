@@ -61,6 +61,31 @@ public class DnsHeader {
         this.resourceEntriesCount = buffer.readDoubleByte();
     }
 
+    void write(BytePacketBuffer buffer) {
+        buffer.writeDoubleByte(this.id);
+        buffer.write(
+                (byte) ((this.recursionDesired ? 1 : 0) |
+                        (this.truncatedMessage ? 1 : 0) << 1 |
+                        (this.authoritativeAnswer ? 1 : 0) << 2 |
+                        (this.opcode  << 3) |
+                        (this.response ? 1 : 0) << 7)
+
+        );
+
+        buffer.write(
+                (byte) (this.resultCode.value |
+                        (this.checkingDisabled ? 1 : 0) << 4 |
+                        (this.authenticatedData ? 1 : 0) << 5 |
+                        (this.z ? 1 : 0) << 6 |
+                        (this.recursionAvailable ? 1 : 0) << 7)
+        );
+
+        buffer.writeDoubleByte(this.questionCount);
+        buffer.writeDoubleByte(this.answerCount);
+        buffer.writeDoubleByte(this.authorityEntriesCount);
+        buffer.writeDoubleByte(this.resourceEntriesCount);
+    }
+
     @Override
     public String toString() {
         return "DnsHeader{" +

@@ -18,6 +18,12 @@ public class DnsQuestion {
         buffer.readDoubleByte(); // class
     }
 
+    void write(BytePacketBuffer buffer) {
+        buffer.writeQName(qname);
+        buffer.writeDoubleByte(qtype.value);
+        buffer.writeDoubleByte(1); // class
+    }
+
     @Override
     public String toString() {
         return "DnsQuestion{" +

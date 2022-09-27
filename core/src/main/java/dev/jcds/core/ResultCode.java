@@ -9,7 +9,7 @@ public enum ResultCode {
     NOT_IMPLEMENTED(4),
     REFUSED(5);
 
-    private final int value;
+    public final int value;
 
     ResultCode(int value) {
         this.value = value;

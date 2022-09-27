@@ -2,7 +2,7 @@ package dev.jcds.core.query;
 
 public class QueryType {
 
-    private final int value;
+    public final int value;
 
     protected QueryType(int i) {
         this.value = i;

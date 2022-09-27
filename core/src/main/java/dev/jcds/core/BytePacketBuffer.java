@@ -47,6 +47,11 @@ public class BytePacketBuffer {
         return buf.get() & 0xFF;
     }
 
+    void write(int val) {
+        require(1);
+        buf.put((byte) val);
+    }
+
     int get(int pos) {
         if (pos < 0 || pos > buf.capacity()) {
             throw new IllegalArgumentException("Invalid position");
@@ -63,6 +68,16 @@ public class BytePacketBuffer {
                 (rawAddress >> 8) & 0xFF,
                 rawAddress & 0xFF
         );
+    }
+
+    public void writeIpAddress(String address) {
+        String[] parts = address.split("\\.");
+        if (parts.length != 4) {
+            throw new IllegalArgumentException("Invalid IP address");
+        }
+        for (String part : parts) {
+            write(Integer.parseInt(part));
+        }
     }
 
     byte[] getRange(int start, int len) {
@@ -82,9 +97,19 @@ public class BytePacketBuffer {
         return this.buf.getShort() & 0xFFFF;
     }
 
+    public void writeDoubleByte(int val) {
+        require(2);
+        this.buf.putShort((short) val);
+    }
+
     public int readFourByte() {
         require(4);
         return this.buf.getInt();
+    }
+
+    public void writeFourByte(int val) {
+        require(4);
+        this.buf.putInt(val);
     }
 
     /// Read a qname
@@ -170,6 +195,21 @@ public class BytePacketBuffer {
             seek(pos);
         }
         return outStrBuilder.toString();
+    }
+
+    public void writeQName(String qname) {
+        String[] labels = qname.split("\\.");
+        for (String label : labels) {
+            if (label.length() > 63) {
+                throw new RuntimeException("Single label exceeds 63 characters");
+            }
+            byte[] labelBytes = label.getBytes(StandardCharsets.US_ASCII);
+            write(labelBytes.length);
+            for (byte labelByte : labelBytes) {
+                write(labelByte);
+            }
+        }
+        write(0);
     }
 
 
