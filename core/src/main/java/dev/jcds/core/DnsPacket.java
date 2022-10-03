@@ -52,6 +52,10 @@ public class DnsPacket {
     }
 
     void write(BytePacketBuffer buffer) {
+        header.questionCount = questions.size();
+        header.answerCount = answers.size();
+        header.authorityEntriesCount = authorities.size();
+        header.resourceEntriesCount = resources.size();
         header.write(buffer);
 
         for (DnsQuestion question : questions) {

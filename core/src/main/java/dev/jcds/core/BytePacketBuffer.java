@@ -13,6 +13,10 @@ public class BytePacketBuffer {
         buf = ByteBuffer.allocate(512);
     }
 
+    public byte[] getBuf() {
+        return buf.array();
+    }
+
     public void setBuf(byte[] buf) {
         byte[] newBuf = new byte[512];
         System.arraycopy(buf, 0, newBuf, 0, buf.length);
