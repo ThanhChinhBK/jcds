@@ -35,32 +35,8 @@ public class DnsRecord {
                 String mx = buffer.readQName("");
                 return new MxDnsRecord(domain, ttl, priority, mx);
             case 28:
-                long rawAddress1 = buffer.readFourByte();
-                long rawAddress2 = buffer.readFourByte();
-                long rawAddress3 = buffer.readFourByte();
-                long rawAddress4 = buffer.readFourByte();
-                Inet6Address aaaaAddress = new Inet6Address(
-                        null,
-                        new byte[]{
-                                (byte) (rawAddress1 >> 24),
-                                (byte) (rawAddress1 >> 16),
-                                (byte) (rawAddress1 >> 8),
-                                (byte) rawAddress1,
-                                (byte) (rawAddress2 >> 24),
-                                (byte) (rawAddress2 >> 16),
-                                (byte) (rawAddress2 >> 8),
-                                (byte) rawAddress2,
-                                (byte) (rawAddress3 >> 24),
-                                (byte) (rawAddress3 >> 16),
-                                (byte) (rawAddress3 >> 8),
-                                (byte) rawAddress3,
-                                (byte) (rawAddress4 >> 24),
-                                (byte) (rawAddress4 >> 16),
-                                (byte) (rawAddress4 >> 8),
-                                (byte) rawAddress4
-                        }
-                );
-
+                String ip6Address = buffer.readIp6Address();
+                return new AaaaDnsRecord(domain, ttl, ip6Address);
             default:
                 return new UnknownDnsType(domain, qtype, dataLength, ttl);
         }

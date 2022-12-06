@@ -74,6 +74,32 @@ public class BytePacketBuffer {
         );
     }
 
+    public String readIp6Address() {
+        long rawAddress1 = readFourByte();
+        long rawAddress2 = readFourByte();
+        long rawAddress3 = readFourByte();
+        long rawAddress4 = readFourByte();
+        return String.format(
+                "%x:%x:%x:%x:%x:%x:%x:%x",
+                (rawAddress1 >> 24) & 0xFF,
+                (rawAddress1 >> 16) & 0xFF,
+                (rawAddress1 >> 8) & 0xFF,
+                rawAddress1 & 0xFF,
+                (rawAddress2 >> 24) & 0xFF,
+                (rawAddress2 >> 16) & 0xFF,
+                (rawAddress2 >> 8) & 0xFF,
+                rawAddress2 & 0xFF,
+                (rawAddress3 >> 24) & 0xFF,
+                (rawAddress3 >> 16) & 0xFF,
+                (rawAddress3 >> 8) & 0xFF,
+                rawAddress3 & 0xFF,
+                (rawAddress4 >> 24) & 0xFF,
+                (rawAddress4 >> 16) & 0xFF,
+                (rawAddress4 >> 8) & 0xFF,
+                rawAddress4 & 0xFF
+        );
+    }
+
     public void writeIpAddress(String address) {
         String[] parts = address.split("\\.");
         if (parts.length != 4) {

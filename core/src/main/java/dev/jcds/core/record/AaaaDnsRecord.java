@@ -3,11 +3,11 @@ package dev.jcds.core.record;
 import java.net.Inet6Address;
 
 public class AaaaDnsRecord extends DnsRecord{
-    private Inet6Address address;
+    private String ip6Address;
 
-    public AaaaDnsRecord(String domain, int ttl, Inet6Address address) {
+    public AaaaDnsRecord(String domain, int ttl, String ip6Address) {
         super(domain, ttl);
-        this.address = address;
+        this.ip6Address = ip6Address;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class AaaaDnsRecord extends DnsRecord{
                 '}';
     }
 
-    public Inet6Address getIpv6Address() {
-        return address;
+    public String getIp6Address() {
+        return ip6Address;
     }
 }
