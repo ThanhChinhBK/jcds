@@ -1,5 +1,7 @@
 package dev.jcds.core.record;
 
+import dev.jcds.core.BytePacketBuffer;
+
 public class MxDnsRecord extends DnsRecord{
     private int priority;
     private String mx;
@@ -26,5 +28,22 @@ public class MxDnsRecord extends DnsRecord{
 
     public String getMx() {
         return mx;
+    }
+
+
+    public void write(BytePacketBuffer buffer){
+        buffer.writeQName(domain);
+        buffer.writeDoubleByte(15); // type
+        buffer.writeDoubleByte(1);
+        buffer.writeFourByte(ttl);
+
+        int pos = buffer.getPos();
+        buffer.writeDoubleByte(0); // length
+
+        buffer.writeDoubleByte(priority);
+        buffer.writeQName(mx);
+        int size = buffer.getPos() - pos - 2;
+        buffer.setDoubleByte(pos, size);
+
     }
 }

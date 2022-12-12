@@ -1,5 +1,7 @@
 package dev.jcds.core.record;
 
+import dev.jcds.core.BytePacketBuffer;
+
 import java.net.Inet6Address;
 
 public class AaaaDnsRecord extends DnsRecord{
@@ -13,7 +15,7 @@ public class AaaaDnsRecord extends DnsRecord{
     @Override
     public String toString() {
         return "AaaaDnsRecord{" +
-                "ipv6Address='" + address.toString() + '\'' +
+                "ipv6Address='" + ip6Address + '\'' +
                 ", domain='" + domain + '\'' +
                 ", ttl=" + ttl +
                 '}';
@@ -21,5 +23,14 @@ public class AaaaDnsRecord extends DnsRecord{
 
     public String getIp6Address() {
         return ip6Address;
+    }
+
+    public void write(BytePacketBuffer buffer) {
+        buffer.writeQName(domain);
+        buffer.writeDoubleByte(28); // type
+        buffer.writeDoubleByte(1);
+        buffer.writeFourByte(ttl);
+        buffer.writeDoubleByte(16); // length
+        buffer.writeIpAddress(ip6Address);
     }
 }

@@ -63,6 +63,14 @@ public class BytePacketBuffer {
         return buf.get(pos) & 0xFF;
     }
 
+    public void set(int pos, int val) {
+        if (pos < 0 || pos > buf.capacity()) {
+            throw new IllegalArgumentException("Invalid position");
+        }
+        buf.put(pos, (byte) val);
+    }
+
+
     public String readIpAddress() {
         long rawAddress = readFourByte();
         return String.format(
@@ -130,6 +138,14 @@ public class BytePacketBuffer {
     public void writeDoubleByte(int val) {
         require(2);
         this.buf.putShort((short) val);
+    }
+
+    public void setDoubleByte(int pos, int val) {
+        if (pos < 0 || pos > buf.capacity()) {
+            throw new IllegalArgumentException("Invalid position");
+        }
+        this.set(pos, val >> 8);
+        this.set(pos + 1, val & 0xFF);
     }
 
     public int readFourByte() {
