@@ -8,6 +8,7 @@ public class NsDnsRecord extends DnsRecord {
     public NsDnsRecord(String domain, int ttl, String ns) {
         super(domain, ttl);
         this.ns = ns;
+        this.qtypeString = "NS";
     }
 
     @Override

@@ -8,6 +8,7 @@ public class UnknownDnsType extends DnsRecord {
         super(domain, ttl);
         this.qtype = qtype;
         this.dataLength = dataLength;
+        this.qtypeString = "UNKNOWN";
     }
 
     public int getQtype() {

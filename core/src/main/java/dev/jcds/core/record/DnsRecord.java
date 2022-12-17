@@ -8,6 +8,8 @@ public class DnsRecord {
     protected String domain;
     protected int ttl;
 
+    public String qtypeString;
+
     protected DnsRecord(String domain, int ttl) {
         this.domain = domain;
         this.ttl = ttl;

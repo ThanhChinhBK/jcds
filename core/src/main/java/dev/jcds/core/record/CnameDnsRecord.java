@@ -5,9 +5,11 @@ import dev.jcds.core.BytePacketBuffer;
 public class CnameDnsRecord extends DnsRecord {
     private String cname;
 
+
     public CnameDnsRecord(String domain, int ttl, String cname) {
         super(domain, ttl);
         this.cname = cname;
+        this.qtypeString = "CNAME";
     }
 
     @Override

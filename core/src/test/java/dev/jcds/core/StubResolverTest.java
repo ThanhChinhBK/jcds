@@ -1,18 +1,20 @@
 package dev.jcds.core;
 
-import dev.jcds.core.query.AQueryType;
+import dev.jcds.core.query.CnameQueryType;
 import dev.jcds.core.query.QueryType;
 import dev.jcds.core.record.DnsRecord;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.IOException;
 import java.net.*;
 
 public class StubResolverTest {
-    @Test
-    public void testStubResolver() throws IOException {
+    @ParameterizedTest
+    @CsvSource({"1,A", "2,NS", "5,CNAME", "15,MX", "28,AAAA"})
+    public void testStubResolver(int qtypeInt, String qtypeString) throws IOException {
         String qname = "google.com";
-        QueryType qtype = QueryType.fromValue(1); // A
+        QueryType qtype = QueryType.fromValue(qtypeInt);
 
         // Google's DNS server
         String serverIp = "8.8.8.8";
@@ -58,6 +60,9 @@ public class StubResolverTest {
                 responsePacket
         );
 
+        // unbind the socket
+        socket.close();
+
         // get response buffer
         responseBuffer.setBuf(responsePacket.getData());
 
@@ -79,18 +84,23 @@ public class StubResolverTest {
         assert !response.header.z;
         assert response.header.recursionAvailable;
         assert response.header.questionCount == 1;
-        assert response.header.answerCount == 1;
-        assert response.header.authorityEntriesCount == 0;
+        if (!(qtype instanceof CnameQueryType)) {
+            assert response.header.authorityEntriesCount == 0;
+        } else {
+            assert response.header.authorityEntriesCount == 1;
+        }
         assert response.header.resourceEntriesCount == 0;
 
 
         // Test questions
         DnsQuestion question = response.questions.get(0);
         assert question.qname.equals(qname);
-        assert question.qtype.toString().equals("A");
+        assert question.qtype.toString().equals(qtypeString);
 
         // Test answers
-        DnsRecord record = response.answers.get(0);
-        assert record.getDomain().equals(qname);
+        for (DnsRecord answer : response.answers) {
+            System.out.println(answer.qtypeString);
+            assert answer.qtypeString.equals(qtypeString);
+        }
     }
 }

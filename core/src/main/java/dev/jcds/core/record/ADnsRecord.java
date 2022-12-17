@@ -8,6 +8,7 @@ public class ADnsRecord extends DnsRecord {
     public ADnsRecord(String domain, String address, int ttl) {
         super(domain, ttl);
         this.address = address;
+        this.qtypeString = "A";
     }
 
     public String getAddress() {

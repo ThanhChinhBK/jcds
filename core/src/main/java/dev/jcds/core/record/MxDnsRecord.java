@@ -10,6 +10,7 @@ public class MxDnsRecord extends DnsRecord{
         super(domain, ttl);
         this.priority = priority;
         this.mx = mx;
+        this.qtypeString = "MX";
     }
 
     @Override

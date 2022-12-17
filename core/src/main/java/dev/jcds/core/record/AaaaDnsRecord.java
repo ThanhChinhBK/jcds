@@ -10,6 +10,7 @@ public class AaaaDnsRecord extends DnsRecord{
     public AaaaDnsRecord(String domain, int ttl, String ip6Address) {
         super(domain, ttl);
         this.ip6Address = ip6Address;
+        this.qtypeString = "AAAA";
     }
 
     @Override
