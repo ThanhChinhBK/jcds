@@ -1,5 +1,6 @@
 package dev.jcds.core;
 
+import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
@@ -68,6 +69,15 @@ public class BytePacketBuffer {
             throw new IllegalArgumentException("Invalid position");
         }
         buf.put(pos, (byte) val);
+    }
+
+
+    public DatagramPacket getPacket(String dnsServer, int port) {
+        return new DatagramPacket(
+                buf.array(),
+                buf.position(),
+                java.net.InetSocketAddress.createUnresolved(dnsServer, port)
+        );
     }
 
 

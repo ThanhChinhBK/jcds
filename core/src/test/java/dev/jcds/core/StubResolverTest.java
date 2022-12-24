@@ -22,10 +22,6 @@ public class StubResolverTest {
 
         // Bind a UDP socket to an arbitrary port
         DatagramSocket socket = new DatagramSocket(null);
-        socket.bind(
-                new InetSocketAddress("0.0.0.0", 5566)
-        );
-
         // Build our DNS query
         DnsPacket packet = new DnsPacket();
         packet.header.id = 6666;
@@ -45,9 +41,14 @@ public class StubResolverTest {
                 InetAddress.getByName(serverIp),
                 serverPort
         );
-        socket.send(
-                requestPacket
-        );
+        try{
+            socket.send(
+                    requestPacket
+            );
+        } catch (NullPointerException e) {
+            System.out.println("Null pointer exception");
+            socket.close();
+        }
 
         // To prepare for receiving the response, we'll create a new `BytePacketBuffer`,
         // and ask the socket to write the response directly into our buffer.
@@ -99,7 +100,6 @@ public class StubResolverTest {
 
         // Test answers
         for (DnsRecord answer : response.answers) {
-            System.out.println(answer.qtypeString);
             assert answer.qtypeString.equals(qtypeString);
         }
     }
